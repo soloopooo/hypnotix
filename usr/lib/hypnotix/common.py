@@ -185,10 +185,14 @@ class Manager:
                             for data in response.iter_content(block_bytes, decode_unicode=True):
                                 downloaded_bytes += block_bytes
                                 print("{} bytes".format(downloaded_bytes))
-                                file.write(str(data))
-                        if downloaded_bytes < total_content_size:
-                            print("The file size is incorrect, deleting")
-                            os.remove(provider.path)
+                                # if data is still bytes, decode it
+                                if isinstance(data, bytes):
+                                    data = data.decode('utf-8', errors='ignore')
+                                else:
+                                    data = str(data)
+                                # Write data to file
+                                file.write(data)
+
                         else:
                             # Set the datatime when it was last retreived
                             # self.settings.set_
